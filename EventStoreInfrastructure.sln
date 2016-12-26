@@ -3,8 +3,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EventStoreInfrastructure", "EventStoreInfrastructure\EventStoreInfrastructure.xproj", "{9E03D5E1-CFFB-4FB4-BD88-3662D5AAEB40}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{74552BAE-AA23-4447-A18D-FBF47DDE9633}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EventStoreInfrastructure.Tests", "EventStoreInfrastructure.Tests\EventStoreInfrastructure.Tests.xproj", "{3D26DC7E-BC8E-4C51-850A-84BBBB1E4374}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9E03D5E1-CFFB-4FB4-BD88-3662D5AAEB40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E03D5E1-CFFB-4FB4-BD88-3662D5AAEB40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E03D5E1-CFFB-4FB4-BD88-3662D5AAEB40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E03D5E1-CFFB-4FB4-BD88-3662D5AAEB40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D26DC7E-BC8E-4C51-850A-84BBBB1E4374}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D26DC7E-BC8E-4C51-850A-84BBBB1E4374}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D26DC7E-BC8E-4C51-850A-84BBBB1E4374}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D26DC7E-BC8E-4C51-850A-84BBBB1E4374}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3D26DC7E-BC8E-4C51-850A-84BBBB1E4374} = {74552BAE-AA23-4447-A18D-FBF47DDE9633}
 	EndGlobalSection
 EndGlobal

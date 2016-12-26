@@ -1,0 +1,27 @@
+{
+  "version": "1.0.0-*",
+  "testRunner": "xunit",
+  "dependencies": {
+    "AutoFixture.AutoFakeItEasy": "3.50.2",
+    "AutoFixture.Xunit2": "3.50.2",
+    "EventStore.Client": "3.9.4",
+    "EventStoreInfrastructure": "1.0.0-*",
+    "FluentAssertions": "4.18.0",
+    "NETStandard.Library": "1.6.0",
+    "Serilog": "2.3.0",
+    "xunit": "2.2.0-beta2-build3300"
+  },
+
+  "frameworks": {
+    "net461": {
+      "dependencies": {
+        "dotnet-test-xunit": "2.2.0-preview2-build1029"
+      }
+    }
+  },
+  "buildOptions": {
+    "copyToOutput": {
+      "include": [ "xunit.runner.json" ]
+    }
+  }
+}
