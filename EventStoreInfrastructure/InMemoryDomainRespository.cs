@@ -4,7 +4,6 @@ using System.Linq;
 using EventStore.ClientAPI.Exceptions;
 using EventStoreInfrastructure.Interfaces;
 using Newtonsoft.Json;
-using Workout.Infrastructure.EventStoreInfrastructure;
 using Workout.Infrastructure.EventStoreInfrastructure.Exceptions;
 
 namespace EventStoreInfrastructure
@@ -30,7 +29,7 @@ namespace EventStoreInfrastructure
             var expectedVersion = CalculateExpectedVersion(aggregate, eventsToSave);
             if (expectedVersion < 0)
             {
-                _eventStore.Add(aggregate.Id, serializedEvents);
+                _eventStore.Add(eventsToSave.First().Id, serializedEvents);
             }
             else
             {
