@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace Workout.Infrastructure
+namespace EventStoreInfrastructure
 {
     public class Resources
     {

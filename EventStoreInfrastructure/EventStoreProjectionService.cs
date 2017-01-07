@@ -2,7 +2,7 @@
 using EventStore.ClientAPI.SystemData;
 using EventStoreInfrastructure.Interfaces;
 
-namespace Workout.Infrastructure.EventStoreInfrastructure
+namespace EventStoreInfrastructure
 {
     public class EventStoreProjectionService : IEventStoreProjectionService
     {

@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using EventStore.ClientAPI;
+using EventStoreInfrastructure.Exceptions;
 using EventStoreInfrastructure.Interfaces;
-using Workout.Infrastructure.EventStoreInfrastructure;
-using Workout.Infrastructure.EventStoreInfrastructure.Exceptions;
 
 namespace EventStoreInfrastructure
 {

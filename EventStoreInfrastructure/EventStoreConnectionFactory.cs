@@ -3,7 +3,7 @@ using System.Net;
 using EventStore.ClientAPI;
 using EventStore.ClientAPI.SystemData;
 
-namespace Workout.Infrastructure.EventStoreInfrastructure
+namespace EventStoreInfrastructure
 {
     public interface IEventStoreConnectionFactory
     {

@@ -2,7 +2,7 @@
 using System.Net;
 using EventStore.ClientAPI.Projections;
 
-namespace Workout.Infrastructure.EventStoreInfrastructure
+namespace EventStoreInfrastructure
 {
     public interface IEventStoreProjectionsManagerFactory
     {

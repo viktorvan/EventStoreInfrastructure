@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using EventStore.ClientAPI;
 using EventStoreInfrastructure.Interfaces;
 
-namespace Workout.Infrastructure.EventStoreInfrastructure
+namespace EventStoreInfrastructure
 {
     public class InMemoryPositionService : IEventStoreSubscriptionPositionService
     {

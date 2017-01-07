@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Workout.Infrastructure.EventStoreInfrastructure.Exceptions
+namespace EventStoreInfrastructure.Exceptions
 {
     public class AggregateNotFoundException : Exception
     {
