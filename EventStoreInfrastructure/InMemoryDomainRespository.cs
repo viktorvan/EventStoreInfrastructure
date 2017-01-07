@@ -29,7 +29,7 @@ namespace EventStoreInfrastructure
             var expectedVersion = CalculateExpectedVersion(aggregate, eventsToSave);
             if (expectedVersion < 0)
             {
-                _eventStore.Add(eventsToSave.First().Id, serializedEvents);
+                _eventStore.Add(aggregate.Id, serializedEvents);
             }
             else
             {
