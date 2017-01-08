@@ -1,5 +1,5 @@
 ﻿{
-  "version": "1.4.3-*",
+  "version": "1.4.4-*",
 
   "dependencies": {
     "EventStore.Client": "3.9.4",
