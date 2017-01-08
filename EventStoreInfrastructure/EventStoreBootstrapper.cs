@@ -34,7 +34,7 @@ namespace EventStoreInfrastructure
         private IEventStoreProjectionsManagerFactory ProjectionsManagerFactory
             =>
                 new EventStoreProjectionsManagerFactory(_eventStoreSettings.EventStoreHostname,
-                    _eventStoreSettings.EventStorePort, _eventStoreSettings.ProjectionTimeout);
+                    _eventStoreSettings.EventStoreHttpPort, _eventStoreSettings.ProjectionTimeout);
 
         private IEventSerializer EventSerializer => new EventSerializer(_eventStoreSettings.Domain);
 
@@ -45,6 +45,6 @@ namespace EventStoreInfrastructure
                 (_eventStoreConnectionFactory =
                     new EventStoreConnectionFactory(_eventStoreSettings.EventStoreUser,
                         _eventStoreSettings.EventStorePassword, _eventStoreSettings.EventStoreHostname,
-                        _eventStoreSettings.EventStorePort));
+                        _eventStoreSettings.EventStoreTcpPort));
     }
 }
