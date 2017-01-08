@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EventStoreInfrastructure.Interfaces
 {
     public interface IEventStoreReader
     {
-        List<IEvent> ReadAllEvents(int startPosition, string projectionBuilder, string stream);
+        Task<List<IEvent>> ReadAllEventsAsync(int startPosition, string projectionBuilder, string stream);
         int LastPosition { get; }
     }
 }

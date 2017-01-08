@@ -1,4 +1,5 @@
-﻿using EventStore.ClientAPI.Projections;
+﻿using System.Threading.Tasks;
+using EventStore.ClientAPI.Projections;
 using EventStore.ClientAPI.SystemData;
 using EventStoreInfrastructure.Interfaces;
 
@@ -15,14 +16,14 @@ namespace EventStoreInfrastructure
             _projectionsManager = projectionsManager;
         }
 
-        public void AddOrUpdateProjection(string name, string query)
+        public async Task AddOrUpdateProjectionAsync(string name, string query)
         {
-            _projectionsManager.CreateContinuousAsync(name, query, _credentials).Wait();
+            await _projectionsManager.CreateContinuousAsync(name, query, _credentials);
         }
 
-        public string ReadProjectionResult(string name)
+        public async Task<string> ReadProjectionResultAsync(string name)
         {
-            return _projectionsManager.GetResultAsync(name, _credentials).Result;
+            return await _projectionsManager.GetResultAsync(name, _credentials);
         }
     }
 }

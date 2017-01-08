@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using EventStoreInfrastructure.Interfaces;
 
 namespace EventStoreInfrastructure
 {
     public abstract class DomainRepositoryBase : IDomainRepository
     {
-        public abstract IEnumerable<IEvent> Save<TAggregate>(TAggregate aggregate) where TAggregate : IAggregate;
-        public abstract TResult GetById<TResult>(Guid id) where TResult : IAggregate, new();
+        public abstract Task<IEnumerable<IEvent>> SaveAsync<TAggregate>(TAggregate aggregate) where TAggregate : IAggregate;
+        public abstract Task<TResult> GetByIdAsync<TResult>(Guid id) where TResult : IAggregate, new();
 
         protected int CalculateExpectedVersion(IAggregate aggregate, List<IEvent> events)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EventStore.ClientAPI.Exceptions;
 using EventStoreInfrastructure.Exceptions;
 using EventStoreInfrastructure.Interfaces;
@@ -22,7 +23,7 @@ namespace EventStoreInfrastructure
             };
         }
 
-        public override IEnumerable<IEvent> Save<TAggregate>(TAggregate aggregate)
+        public override Task<IEnumerable<IEvent>> SaveAsync<TAggregate>(TAggregate aggregate)
         {
             var eventsToSave = aggregate.UncommitedEvents().ToList();
             var serializedEvents = eventsToSave.Select(Serialize).ToList();
@@ -44,7 +45,7 @@ namespace EventStoreInfrastructure
             }
             _latestEvents.AddRange(eventsToSave);
             aggregate.ClearUncommitedEvents();
-            return eventsToSave;
+            return Task.FromResult(eventsToSave.AsEnumerable());
         }
 
         private string Serialize(IEvent arg)
@@ -57,13 +58,13 @@ namespace EventStoreInfrastructure
             return _latestEvents;
         }
 
-        public override TResult GetById<TResult>(Guid id)
+        public override async Task<TResult> GetByIdAsync<TResult>(Guid id)
         {
             if (_eventStore.ContainsKey(id))
             {
                 var events = _eventStore[id];
                 var deserializedEvents = events.Select(e => JsonConvert.DeserializeObject(e, _serializationSettings) as IEvent);
-                return BuildAggregate<TResult>(deserializedEvents);
+                return await Task.FromResult(BuildAggregate<TResult>(deserializedEvents));
             }
             throw new AggregateNotFoundException("Could not find aggregate of type " + typeof(TResult) + " and id " + id);
         }

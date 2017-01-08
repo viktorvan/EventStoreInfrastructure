@@ -17,7 +17,7 @@ namespace EventStoreInfrastructure
         public IDomainRepository EventRepository
         {
             get
-            {
+            { 
                 return _eventRepository ??
                        (_eventRepository = new EventStoreDomainRepository(EventStoreConnectionFactory, EventSerializer, _eventStoreSettings.Domain));
             }

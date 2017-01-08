@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EventStoreInfrastructure.Interfaces
 {
     public interface IDomainRepository
     {
-        IEnumerable<IEvent> Save<TAggregate>(TAggregate aggregate) where TAggregate : IAggregate;
-        TResult GetById<TResult>(Guid id) where TResult : IAggregate, new();
+        Task<IEnumerable<IEvent>> SaveAsync<TAggregate>(TAggregate aggregate) where TAggregate : IAggregate;
+        Task<TResult> GetByIdAsync<TResult>(Guid id) where TResult : IAggregate, new();
     }
 }

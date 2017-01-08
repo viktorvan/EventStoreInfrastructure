@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading.Tasks;
 using EventStore.ClientAPI;
 using EventStore.ClientAPI.SystemData;
 
@@ -7,7 +8,7 @@ namespace EventStoreInfrastructure
 {
     public interface IEventStoreConnectionFactory
     {
-        IEventStoreConnection Create();
+        Task<IEventStoreConnection> CreateAsync();
     }
 
     public class EventStoreConnectionFactory : IEventStoreConnectionFactory
@@ -23,9 +24,8 @@ namespace EventStoreInfrastructure
             _endPoint = new IPEndPoint(ipAddress, port);
         }
 
-        public IEventStoreConnection Create()
+        public async Task<IEventStoreConnection> CreateAsync()
         {
-            var now = DateTime.Now;
             ConnectionSettings settings =
                 ConnectionSettings.Create()
                     // todo should set up some logging here. ideally a serilog-wrapper
@@ -36,7 +36,7 @@ namespace EventStoreInfrastructure
                     .SetDefaultUserCredentials(_credentials);
 
             var connection = EventStoreConnection.Create(settings, _endPoint);
-            connection.ConnectAsync().Wait();
+            await connection.ConnectAsync();
             return connection;
         }
     }

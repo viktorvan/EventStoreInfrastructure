@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EventStore.ClientAPI;
 using EventStoreInfrastructure.Interfaces;
 using Serilog;
@@ -21,21 +22,21 @@ namespace EventStoreInfrastructure
 
         public int LastPosition => _lastPosition;
 
-        public List<IEvent> ReadAllEvents(int startPosition, string projectionBuilder, string stream)
+        public async Task<List<IEvent>> ReadAllEventsAsync(int startPosition, string projectionBuilder, string stream)
         {
             _projectionBuilderName = projectionBuilder;
-            var events = ReadAllEvents(stream, startPosition);
+            var events = await ReadAllEventsAsync(stream, startPosition);
 
             return events.Select(x => _serializer.DeserializeEvent(x.OriginalEvent) as IEvent).ToList();
         }
 
-        private List<ResolvedEvent> ReadAllEvents(string stream, int startPosition)
+        private async Task<List<ResolvedEvent>> ReadAllEventsAsync(string stream, int startPosition)
         {
             Log.Information(
                 "ProjectionBuilder {name} reading all events from store {eventStore} from position {position}",
                 _projectionBuilderName, _service.ConnectionName, startPosition);
 
-            var events = _service.ReadStreamEvents(stream, startPosition);
+            var events = await _service.ReadStreamEventsAsync(stream, startPosition);
             _lastPosition = _service.CurrentPosition;
             return events;
         }
@@ -43,7 +44,7 @@ namespace EventStoreInfrastructure
 
     public interface IEventStoreConnectionService
     {
-        List<ResolvedEvent> ReadStreamEvents(string streamName, int startPosition);
+        Task<List<ResolvedEvent>> ReadStreamEventsAsync(string streamName, int startPosition);
         string ConnectionName { get; }
         int CurrentPosition { get; }
     }
@@ -61,14 +62,14 @@ namespace EventStoreInfrastructure
         public string ConnectionName => _connection.ConnectionName;
         public int CurrentPosition => _currentPosition;
 
-        public List<ResolvedEvent> ReadStreamEvents(string streamName, int startPosition)
+        public async Task<List<ResolvedEvent>> ReadStreamEventsAsync(string streamName, int startPosition)
         {
             var streamEvents = new List<ResolvedEvent>();
             _currentPosition = startPosition;
             StreamEventsSlice currentSlice;
             do
             {
-                currentSlice = _connection.ReadStreamEventsForwardAsync(streamName, _currentPosition, 200, true).Result;
+                currentSlice = await _connection.ReadStreamEventsForwardAsync(streamName, _currentPosition, 200, true);
                 _currentPosition = currentSlice.NextEventNumber;
                 streamEvents.AddRange(currentSlice.Events);
             } while (!currentSlice.IsEndOfStream);

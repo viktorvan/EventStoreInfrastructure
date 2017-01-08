@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EventStore.ClientAPI;
 using EventStoreInfrastructure.Exceptions;
 using EventStoreInfrastructure.Interfaces;
@@ -15,24 +16,25 @@ namespace EventStoreInfrastructure
         private readonly IEventSerializer _serializer;
         private readonly string _category;
 
+
         public EventStoreDomainRepository(IEventStoreConnectionFactory factory, IEventSerializer serializer, string category)
         {
             _serializer = serializer;
             _category = category;
-            _connection = factory.Create();
+            _connection = factory.CreateAsync().Result;
         }
 
-        public override IEnumerable<IEvent> Save<TAggregate>(TAggregate aggregate)
+        public override async Task<IEnumerable<IEvent>> SaveAsync<TAggregate>(TAggregate aggregate)
         {
             var events = aggregate.UncommitedEvents().ToList();
             var expectedVersion = CalculateExpectedVersion(aggregate, events);
             var eventData = events.Select(_serializer.CreateEventData);
             var streamName = AggregateToStreamName(aggregate.GetType(), aggregate.Id);
-            _connection.AppendToStreamAsync(streamName, expectedVersion, eventData);
+            await _connection.AppendToStreamAsync(streamName, expectedVersion, eventData);
             return events;
         }
 
-        public override TResult GetById<TResult>(Guid id)
+        public override async Task<TResult> GetByIdAsync<TResult>(Guid id)
         {
             var streamName = AggregateToStreamName(typeof(TResult), id);
 
@@ -42,7 +44,7 @@ namespace EventStoreInfrastructure
             var nextSliceStart = StreamPosition.Start;
             do
             {
-                currentSlice = _connection.ReadStreamEventsForwardAsync(streamName, nextSliceStart, 200, false).Result;
+                currentSlice = await _connection.ReadStreamEventsForwardAsync(streamName, nextSliceStart, 200, false);
                 if (currentSlice.Status == SliceReadStatus.StreamNotFound)
                 {
                     throw new AggregateNotFoundException("Could not find aggregate of type " + typeof(TResult) + " and id " + id);
