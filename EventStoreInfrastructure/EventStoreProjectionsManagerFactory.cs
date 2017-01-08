@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net;
 using EventStore.ClientAPI.Projections;
+using Serilog;
+using ILogger = EventStore.ClientAPI.ILogger;
 
 namespace EventStoreInfrastructure
 {
@@ -22,8 +24,41 @@ namespace EventStoreInfrastructure
         }
 
         public ProjectionsManager Create()
+        {            
+            return new ProjectionsManager(new Logger(), _endPoint, _timeout);
+        }
+    }
+
+    public class Logger : ILogger
+    {
+        public void Error(string format, params object[] args)
         {
-            return new ProjectionsManager(null, _endPoint, _timeout);
+            Log.Error(format, args);
+        }
+
+        public void Error(Exception ex, string format, params object[] args)
+        {
+            Log.Error(ex, format, args);
+        }
+
+        public void Info(string format, params object[] args)
+        {
+            Log.Information(format, args);
+        }
+
+        public void Info(Exception ex, string format, params object[] args)
+        {
+            Log.Information(ex, format, args);
+        }
+
+        public void Debug(string format, params object[] args)
+        {
+            Log.Debug(format, args);
+        }
+
+        public void Debug(Exception ex, string format, params object[] args)
+        {
+            Log.Debug(ex, format, args);
         }
     }
 }
