@@ -7,6 +7,7 @@ namespace EventStoreInfrastructure
         private IDomainRepository _eventRepository;
         private readonly IEventStoreSettings _eventStoreSettings;
         private IEventStoreConnectionFactory _eventStoreConnectionFactory;
+        private IEventStoreProjectionService _eventProjectionService;
 
         public EventStoreBootstrapper(IEventStoreSettings eventStoreSettings)
         {
@@ -22,6 +23,18 @@ namespace EventStoreInfrastructure
             }
             set { _eventRepository = value; }
         }
+
+        public IEventStoreProjectionService EventProjectionService
+            =>
+                _eventProjectionService ??
+                (_eventProjectionService =
+                    new EventStoreProjectionService(ProjectionsManagerFactory.Create(),
+                        _eventStoreSettings.EventStoreUser, _eventStoreSettings.EventStorePassword));
+
+        private IEventStoreProjectionsManagerFactory ProjectionsManagerFactory
+            =>
+                new EventStoreProjectionsManagerFactory(_eventStoreSettings.EventStoreHostname,
+                    _eventStoreSettings.EventStorePort, _eventStoreSettings.ProjectionTimeout);
 
         private IEventSerializer EventSerializer => new EventSerializer(_eventStoreSettings.Domain);
 
