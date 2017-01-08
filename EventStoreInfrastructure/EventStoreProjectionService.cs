@@ -16,9 +16,14 @@ namespace EventStoreInfrastructure
             _projectionsManager = projectionsManager;
         }
 
-        public async Task AddOrUpdateProjectionAsync(string name, string query)
+        public async Task CreateOrUpdateProjectionAsync(string name, string query)
         {
-            await _projectionsManager.CreateContinuousAsync(name, query, _credentials);
+            var oldQuery = await _projectionsManager.GetQueryAsync(name, _credentials);
+            if (oldQuery != query)
+            {
+                await _projectionsManager.DeleteAsync(name, _credentials);
+                await _projectionsManager.CreateContinuousAsync(name, query, _credentials);
+            }
         }
 
         public async Task<string> ReadProjectionResultAsync(string name)
