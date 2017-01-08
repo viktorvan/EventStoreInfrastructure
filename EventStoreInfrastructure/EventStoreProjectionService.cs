@@ -23,9 +23,10 @@ namespace EventStoreInfrastructure
             {
                 var oldQuery = await _projectionsManager.GetQueryAsync(name, _credentials);
                 if (oldQuery == query) return false;
+
+                await _projectionsManager.DeleteAsync(name, _credentials);
             }
 
-            await _projectionsManager.DeleteAsync(name, _credentials);
             await _projectionsManager.CreateContinuousAsync(name, query, _credentials);
 
             return true;
