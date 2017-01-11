@@ -19,15 +19,15 @@ namespace EventStoreInfrastructure
 
         public async Task<bool> CreateOrUpdateProjectionAsync(string name, string query)
         {
-            if (await Exists(name))
+            if (!await Exists(name))
             {
-                var oldQuery = await _projectionsManager.GetQueryAsync(name, _credentials);
-                if (oldQuery == query) return false;
-
-                await _projectionsManager.DeleteAsync(name, _credentials);
+                await _projectionsManager.CreateContinuousAsync(name, query, _credentials);
+                return true;
             }
+            var oldQuery = await _projectionsManager.GetQueryAsync(name, _credentials);
+            if (oldQuery == query) return false;
 
-            await _projectionsManager.CreateContinuousAsync(name, query, _credentials);
+            await _projectionsManager.UpdateQueryAsync(name, query, _credentials);
 
             return true;
         }
