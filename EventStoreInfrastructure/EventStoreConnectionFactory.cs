@@ -20,7 +20,7 @@ namespace EventStoreInfrastructure
         {
             _credentials = new UserCredentials(username, password);
 
-            var ipAddress = Dns.GetHostAddresses(ip)[0];
+            var ipAddress = Dns.GetHostAddressesAsync(ip).Result[0];
             _endPoint = new IPEndPoint(ipAddress, port);
         }
 

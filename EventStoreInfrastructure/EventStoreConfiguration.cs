@@ -18,7 +18,7 @@ namespace EventStoreInfrastructure
         public EventStoreConfiguration(string user, string password, string ip, string port)
         {
             UserCredentials = new UserCredentials(user, password);
-            var ipAddress = Dns.GetHostAddresses(ip)[0];
+            var ipAddress = Dns.GetHostAddressesAsync(ip).Result[0];
             EndPoint = new IPEndPoint(ipAddress, Convert.ToInt32(port));
         }
     }

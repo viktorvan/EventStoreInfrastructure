@@ -1,44 +1,43 @@
 ﻿using System;
 using EventStoreInfrastructure.Interfaces;
-using EventStoreInfrastructure.Tests.TestHelpers;
 using FakeItEasy;
 using FluentAssertions;
-using Ploeh.AutoFixture.Xunit2;
 using Serilog;
 using Serilog.Events;
-using Xunit;
 
 namespace EventStoreInfrastructure.Tests
 {
     public class EventDispatcherTests
     {
-        [Theory, AutoFakeItEasyData]
-        public void Dispatch_ShouldLogTryingToHandleEvent(
-            [Frozen] ILogger logger,
-            TestEvent @event,
-            EventDispatcher dispatcher)
+        private readonly EventDispatcher _sut;
+
+        public EventDispatcherTests()
+        {
+            _sut = new EventDispatcher();
+        }
+
+        public void Dispatch_ShouldLogTryingToHandleEvent()
         {
             // arrange
+            var logger = A.Fake<ILogger>();
             Log.Logger = logger;
+            var @event = new TestEvent(Guid.NewGuid());
             
             // act
-            dispatcher.Dispatch(@event);
+            _sut.Dispatch(@event);
 
             // assert
             A.CallTo(() => logger.Write(LogEventLevel.Information, "Trying to dispatch event {type}", typeof(TestEvent))).MustHaveHappened();
         }
 
-        [Theory, AutoFakeItEasyData]
-        public void Dispatch_WhenNoMappingFound_ShouldLogMessage(
-            [Frozen] ILogger logger,
-            TestEvent @event,
-            EventDispatcher dispatcher)
+        public void Dispatch_WhenNoMappingFound_ShouldLogMessage()
         {
             // arrange
+            var logger = A.Fake<ILogger>();
             Log.Logger = logger;
-
+            var @event = new TestEvent(Guid.NewGuid());
             // act
-            dispatcher.Dispatch(@event);
+            _sut.Dispatch(@event);
 
             // assert
             A.CallTo(
@@ -47,34 +46,30 @@ namespace EventStoreInfrastructure.Tests
         } 
 
 
-        [Theory, AutoFakeItEasyData]
-        public void Dispatch_WhenMappingExists_ShouldHandle(
-            TestEvent @event,
-            EventDispatcher dispatcher)
+        public void Dispatch_WhenMappingExists_ShouldHandle()
         {
             // arrange
+            var @event = new TestEvent(Guid.NewGuid());
             var isHandlerCalled = false;
-            dispatcher.AddMapping(typeof(TestEvent), x => isHandlerCalled = true);
-
+            _sut.AddMapping(typeof(TestEvent), x => isHandlerCalled = true);
+            
             // act
-            dispatcher.Dispatch(@event);
+            _sut.Dispatch(@event);
 
             // assert
             isHandlerCalled.Should().BeTrue();
         }
 
-        [Theory, AutoFakeItEasyData]
-        public void Dispatch_WhenMappingExists_ShouldLogHandlingEvent(
-            [Frozen] ILogger logger,
-            TestEvent @event,
-            EventDispatcher dispatcher)
+        public void Dispatch_WhenMappingExists_ShouldLogHandlingEvent()
         {
             // arrange
+            var logger = A.Fake<ILogger>();
             Log.Logger = logger;
-            dispatcher.AddMapping(typeof(TestEvent), x => { });
+            _sut.AddMapping(typeof(TestEvent), x => { });
+            var @event = new TestEvent(Guid.NewGuid());
 
             // act
-            dispatcher.Dispatch(@event);
+            _sut.Dispatch(@event);
 
             // assert
             A.CallTo(() => logger.Write(LogEventLevel.Information, "Handling event {@event}", @event as IEvent))

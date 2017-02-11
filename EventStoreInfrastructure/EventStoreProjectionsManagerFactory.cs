@@ -19,7 +19,7 @@ namespace EventStoreInfrastructure
         public EventStoreProjectionsManagerFactory(string ip, int port, TimeSpan timeout)
         {
             _timeout = timeout;
-            var ipAddress = Dns.GetHostAddresses(ip)[0];
+            var ipAddress = Dns.GetHostAddressesAsync(ip).Result[0];
             _endPoint = new IPEndPoint(ipAddress, port);
         }
 
