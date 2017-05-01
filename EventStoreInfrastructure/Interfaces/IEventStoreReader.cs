@@ -5,7 +5,7 @@ namespace EventStoreInfrastructure.Interfaces
 {
     public interface IEventStoreReader
     {
-        Task<List<IEvent>> ReadAllEventsAsync(int startPosition, string projectionBuilder, string stream);
-        int LastPosition { get; }
+        Task<List<IEvent>> ReadAllEventsAsync(long startPosition, string projectionBuilder, string stream);
+        long LastPosition { get; }
     }
 }

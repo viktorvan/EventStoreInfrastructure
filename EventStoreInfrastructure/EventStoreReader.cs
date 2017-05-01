@@ -10,7 +10,7 @@ namespace EventStoreInfrastructure
     public class EventStoreReader : IEventStoreReader
     {
         private string _projectionBuilderName;
-        private int _lastPosition;
+        private long _lastPosition;
         private readonly IEventSerializer _serializer;
         private readonly IEventStoreConnectionService _service;
 
@@ -20,9 +20,9 @@ namespace EventStoreInfrastructure
             _service = service;
         }
 
-        public int LastPosition => _lastPosition;
+        public long LastPosition => _lastPosition;
 
-        public async Task<List<IEvent>> ReadAllEventsAsync(int startPosition, string projectionBuilder, string stream)
+        public async Task<List<IEvent>> ReadAllEventsAsync(long startPosition, string projectionBuilder, string stream)
         {
             _projectionBuilderName = projectionBuilder;
             var events = await ReadAllEventsAsync(stream, startPosition);
@@ -30,7 +30,7 @@ namespace EventStoreInfrastructure
             return events.Select(x => _serializer.DeserializeEvent(x.OriginalEvent) as IEvent).ToList();
         }
 
-        private async Task<List<ResolvedEvent>> ReadAllEventsAsync(string stream, int startPosition)
+        private async Task<List<ResolvedEvent>> ReadAllEventsAsync(string stream, long startPosition)
         {
             Log.Information(
                 "ProjectionBuilder {name} reading all events from store {eventStore} from position {position}",
@@ -44,14 +44,14 @@ namespace EventStoreInfrastructure
 
     public interface IEventStoreConnectionService
     {
-        Task<List<ResolvedEvent>> ReadStreamEventsAsync(string streamName, int startPosition);
+        Task<List<ResolvedEvent>> ReadStreamEventsAsync(string streamName, long startPosition);
         string ConnectionName { get; }
-        int CurrentPosition { get; }
+        long CurrentPosition { get; }
     }
 
     public class EventStoreConnectionService : IEventStoreConnectionService
     {
-        private int _currentPosition;
+        private long _currentPosition;
         private readonly IEventStoreConnection _connection;
 
         public EventStoreConnectionService(IEventStoreConnection connection)
@@ -60,9 +60,9 @@ namespace EventStoreInfrastructure
         }
 
         public string ConnectionName => _connection.ConnectionName;
-        public int CurrentPosition => _currentPosition;
+        public long CurrentPosition => _currentPosition;
 
-        public async Task<List<ResolvedEvent>> ReadStreamEventsAsync(string streamName, int startPosition)
+        public async Task<List<ResolvedEvent>> ReadStreamEventsAsync(string streamName, long startPosition)
         {
             var streamEvents = new List<ResolvedEvent>();
             _currentPosition = startPosition;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,7 +41,8 @@ namespace EventStoreInfrastructure
             var streamEvents = new List<IEvent>();
 
             StreamEventsSlice currentSlice;
-            var nextSliceStart = StreamPosition.Start;
+
+            long nextSliceStart = StreamPosition.Start;
             do
             {
                 currentSlice = await _connection.ReadStreamEventsForwardAsync(streamName, nextSliceStart, 200, false);
